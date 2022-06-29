@@ -4,7 +4,7 @@ import React from 'react';
 // make a button to change the state and edit the object
 // keep track of index in order to affect state properly
 var Entry = (props) => {
-  return (<div>{props.entryObj.term}: {props.entryObj.def}</div>)
+  return (<div>Term: {props.entryObj.term} ------------------------------------------------------- Definition: {props.entryObj.def}</div>)
 }
 
 
