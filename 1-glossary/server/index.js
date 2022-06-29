@@ -2,9 +2,11 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const db = require("./db.js");
+const bodyParser = require('body-parser');
 
 
 const app = express();
+app.use(bodyParser.json());
 
 var port = process.env.PORT || 8000;
 
@@ -17,7 +19,9 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-  console.log('server index got post request');
+  console.log('server index got post request', req.body);
+  var newDbEntry = new db.Entry({term: req.body.term, def: req.body.def});
+  newDbEntry.save();
   res.end();
 })
 

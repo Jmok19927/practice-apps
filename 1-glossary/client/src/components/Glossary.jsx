@@ -36,8 +36,9 @@ class Glossary extends React.Component {
       term: this.state.addTerm,
       def: definition,
     }
+
     console.log('entered handle Add with obj', JSON.stringify(entryObj))
-    axios.post('')
+    axios.post('', {term: this.state.addTerm, def: definition})
   }
 
   handleDelete() {
