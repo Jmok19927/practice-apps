@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://username:p4ssword@cluster0.ji0dqfy.mongodb.net/Cluster0?retryWrites=true&w=majority");
+// mongoose.connect("mongodb+srv://username:p4ssword@cluster0.ji0dqfy.mongodb.net/Cluster0?retryWrites=true&w=majority");
+mongoose.connect('mongodb://localhost/Glossary');
 
 const entrySchema = new mongoose.Schema({
   term: String,

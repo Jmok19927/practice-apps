@@ -13,24 +13,51 @@ class Glossary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      entries: sampleEntries,
+      entries: [],
       searchTerm: '',
       addTerm: '',
-      addDef: ''
+      addDef: '',
+      matchingEntries: []
     };
+    this.updateEntries = this.updateEntries.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateEntries();
+    this.setState({matchingEntries: this.state.entries})
+  }
+
+  handleSearchChange(event) {
+    console.log(event.target.value)
+    var passingEntries = [];
+
+    this.state.entries.forEach(
+      (entry)=>{
+        if (entry.term.toUpperCase().includes(event.target.value.toUpperCase())) {
+          passingEntries.push(entry);
+        }
+    });
+    if (event.target.value === '') {
+      this.setState({matchingEntries: this.state.entries})
+    } else {
+      this.setState({matchingEntries: passingEntries})
+    }
   }
 
   updateEntries() {
-    axios.get('')
+    var updatedEntries = [];
+    axios.get('/entries').then((data) => {
+      console.log('data in update entries', data.data);
+      updatedEntries = data.data;
+      this.setState({entries: updatedEntries, matchingEntries: updatedEntries});
+    });
   }
 
   handleAddChange(event) {
     this.setState({addTerm: event.target.value});
-    console.log(this.state.addTerm)
   }
 
   handleAddSubmit() {
-    event.preventDefault();
     var definition = prompt(`What is the definition of ${this.state.addTerm}`)
     var entryObj = {
       term: this.state.addTerm,
@@ -38,18 +65,22 @@ class Glossary extends React.Component {
     }
 
     console.log('entered handle Add with obj', JSON.stringify(entryObj))
-    axios.post('', {term: this.state.addTerm, def: definition})
+    axios.post('/entries', {term: this.state.addTerm, def: definition})
+    setTimeout(this.updateEntries, 700);
   }
 
-  handleDelete() {
-    axios.delete('')
+  handleDelete(val) {
+    console.log('entered handleDelete', val)
+    axios.delete('/entries', {data: {_id: val}}).then(()=>{
+      this.updateEntries();
+    })
   }
 
   render() {
     return (<div><h1>Glossary Section</h1>
-    <div><Search/></div>
+    <div><Search search={this.handleSearchChange.bind(this)}/></div>
     <div><AddEntry handleAddSubmit={this.handleAddSubmit.bind(this)} handleAddChange={this.handleAddChange.bind(this)}/></div>
-    <EntryList entries={this.state.entries}/>
+    <EntryList entries={this.state.matchingEntries} delete={this.handleDelete.bind(this)}/>
     </div>
     )
   }

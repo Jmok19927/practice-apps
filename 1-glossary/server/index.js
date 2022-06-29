@@ -13,20 +13,26 @@ var port = process.env.PORT || 8000;
 // Serves up all static and generated assets in ../client/dist.
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-app.get('/', (req, res) => {
+app.get('/entries', (req, res) => {
   console.log('server index got get request');
-  res.end();
+  db.Entry.find().then((data) => {
+    // console.log('server index data from DB', data);
+    res.end(JSON.stringify(data));
+  });
+
 })
 
-app.post('/', (req, res) => {
+app.post('/entries', (req, res) => {
   console.log('server index got post request', req.body);
   var newDbEntry = new db.Entry({term: req.body.term, def: req.body.def});
   newDbEntry.save();
   res.end();
 })
 
-app.delete('/', (req, res) => {
-  console.log('server index got delete request');
+app.delete('/entries', (req, res) => {
+  console.log('server index got delete request', req.body.term);
+  // db.Entry.remove({_id: `ObjectId("${req.body._id}")`})
+  db.Entry.deleteOne({_id: req.body._id}).then(()=>{})
   res.end()
 })
 //get request should pull out all entries from the db and return them as an array of entry objects

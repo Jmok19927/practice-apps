@@ -5,9 +5,8 @@ var Search = (props) => {
   return (
     <form>
       <label>
-        Search Glossary: <input type="text" name="query"/>
+        Search Glossary: <input onChange={props.search} type="text" name="query" defaultValue=''/>
       </label>
-      <input type="submit" value="Submit"/>
     </form>)
 }
 
