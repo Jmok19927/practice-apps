@@ -35,6 +35,14 @@ app.delete('/entries', (req, res) => {
   db.Entry.deleteOne({_id: req.body._id}).then(()=>{})
   res.end()
 })
+
+app.patch('/entries', (req, res) => {
+  console.log('server index got patch req', req.body._id, req.body.def);
+  db.Entry.updateOne({_id: req.body._id}, {
+    $set: {def: req.body.def}
+  }).then(()=>{})
+  res.end();
+})
 //get request should pull out all entries from the db and return them as an array of entry objects
 //post request should take in a entry object in the request, create a Entry document and .save() it to the databse
 //delete request should take in an ID, then use db.deleteOne and match on the ID

@@ -1,10 +1,10 @@
 /**
- * 
+ *
  * Based on Josh Comeau's CSS Reset: https://www.joshwcomeau.com/css/custom-css-reset/.
- * 
+ *
  * Feel free to edit this file as needed.
- * 
- */ 
+ *
+ */
 
 *,
 *::before,
@@ -41,6 +41,10 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+button {
+  margin: 2px;
 }
 
 p,

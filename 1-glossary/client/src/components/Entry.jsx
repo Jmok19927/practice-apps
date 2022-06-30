@@ -4,9 +4,12 @@ import React from 'react';
 // make a button to change the state and edit the object
 // keep track of index in order to affect state properly
 var Entry = (props) => {
-  return (<div style={{display: "flex"}}>Term: {props.entryObj.term}
+  return (<div style={{display: "flex"}}> Term: {props.entryObj.term}
   <p style={{marginLeft:"auto"}}>Definition: {props.entryObj.def}</p>
-  <button onClick={()=> {props.delete(props.entryObj._id)}} style={{marginLeft: "auto"}}>Delete</button></div>)
+  <div style={{marginLeft: "auto"}}>
+  <button onClick={() => {props.edit(props.entryObj._id)}} style={{marginLeft: "auto"}}>Edit</button>
+  <button onClick={()=> {props.delete(props.entryObj._id)}}>Delete</button></div>
+  </div>)
 }
 
 

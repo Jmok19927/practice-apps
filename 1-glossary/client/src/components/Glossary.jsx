@@ -65,8 +65,9 @@ class Glossary extends React.Component {
     }
 
     console.log('entered handle Add with obj', JSON.stringify(entryObj))
-    axios.post('/entries', {term: this.state.addTerm, def: definition})
-    setTimeout(this.updateEntries, 700);
+    axios.post('/entries', {term: this.state.addTerm, def: definition}).then(()=> {
+      this.updateEntries();
+    })
   }
 
   handleDelete(val) {
@@ -76,11 +77,19 @@ class Glossary extends React.Component {
     })
   }
 
+  handleEdit(id) {
+    var newDef = prompt("What is your new definition?");
+    console.log('id and def', id, newDef)
+    axios.patch('entries',{_id: id, def: newDef}).then(() => {
+      this.updateEntries();
+    })
+  }
+
   render() {
     return (<div><h1>Glossary Section</h1>
     <div><Search search={this.handleSearchChange.bind(this)}/></div>
     <div><AddEntry handleAddSubmit={this.handleAddSubmit.bind(this)} handleAddChange={this.handleAddChange.bind(this)}/></div>
-    <EntryList entries={this.state.matchingEntries} delete={this.handleDelete.bind(this)}/>
+    <EntryList entries={this.state.matchingEntries} delete={this.handleDelete.bind(this)} edit={this.handleEdit.bind(this)}/>
     </div>
     )
   }
