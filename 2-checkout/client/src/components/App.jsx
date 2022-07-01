@@ -31,7 +31,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-
+    console.log('mount post user')
+    axios.post("/user", {});
   }
 
   onChange(event) {
@@ -42,13 +43,13 @@ class App extends React.Component {
 
   sendPost() {
     var postObj = {};
-    if (this.page === 1) {
+    if (this.state.page === 1) {
       postObj.type = "Account";
       postObj.name = this.state.name;
       postObj.email = this.state.email;
       postObj.password = this.state.password;
     }
-    if (this.page === 2) {
+    if (this.state.page === 2) {
       postObj.type = "Address";
       postObj.line1 = this.state.line1;
       postObj.line2 = this.state.line2;
@@ -57,18 +58,20 @@ class App extends React.Component {
       postObj.zip = this.state.zip;
       postObj.phoneNumber = this.state.phoneNumber;
     }
-    if (this.page === 3) {
+    if (this.state.page === 3) {
       postObj.type = "Billing";
       postObj.creditCard = this.state.creditCard;
       postObj.expiry = this.state.expiry;
       postObj.CVV = this.state.CVV;
       postObj.billingZIP = this.state.billingZIP
     }
-
+    console.log('sendpost get object', JSON.stringify(postObj));
+    axios.post("/info", postObj);
   }
 
   nextPage(event) {
     console.log('entered nextpage')
+    this.sendPost();
     var nextPage = this.state.page + 1;
     if (this.state.page === 4) {
       this.setState({page: 0});
@@ -78,7 +81,6 @@ class App extends React.Component {
     setTimeout(() => {
       this.setState({currentPage: this.state.pages[this.state.page]})
     }, 100)
-    console.log(this.state.name)
   }
 
   render() {
