@@ -22,11 +22,49 @@ app.use(logger);
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.post("/user", (req, res) => {
-  console.log(req.session_id)
+  db.queryAsync(`INSERT INTO Users (usercookie) VALUES ("${req.session_id}") ON DUPLICATE KEY UPDATE id=id;`).then(() => {
+    console.log('added user: ', req.session_id)
+  }).catch();
 })
 
 app.post("/info", (req, res) => {
+  var postType = req.body.type;
+  var userId;
+  db.queryAsync(`SELECT id FROM Users WHERE "${req.session_id}"=usercookie`).then((data) => {
+    userId = data[0][0].id;
+  }).then(()=> {
+    if (postType === 'Account') {
+      db.queryAsync(`INSERT INTO Account (name, email, password, userid) VALUES (
+        "${req.body.name}",
+        "${req.body.email}",
+        "${req.body.password}",
+        ${userId} )
+        ON DUPLICATE KEY UPDATE id=id`)
+    } else if (postType === 'Address') {
+      db.queryAsync(`INSERT INTO Address (line1, line2, city, state, ZIP, phonenumber, userid) VALUES (
+        "${req.body.line1}",
+        "${req.body.line2}",
+        "${req.body.city}",
+        "${req.body.state}",
+        "${req.body.zip}",
+        "${req.body.phoneNumber}",
+         ${userId} ) ON DUPLICATE KEY UPDATE id=id`)
+    } else if (postType === 'Billing') {
+      db.queryAsync(`INSERT INTO Billing (number, expirydate, CVV, billingZIP, userid) VALUES (
+        "${req.body.creditCard}",
+        "${req.body.expiry}",
+        "${req.body.CVV}",
+        "${req.body.billingZIP}",
+         ${userId} ) ON DUPLICATE KEY UPDATE id=id`)
+    }
+  }).catch();
+
   console.log(req.body)
+  // if (postType === "Account") {
+  //   db.queryAsync(`INSERT INTO Users (usercookie) VALUES ("${req.session_id}") ON DUPLICATE KEY UPDATE id=id;`).then(() => {
+  //     console.log('added user: ', req.session_id)
+  //   })
+  // }
   res.end();
 })
 /****

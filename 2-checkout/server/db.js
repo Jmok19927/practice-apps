@@ -11,16 +11,7 @@ const connection = mysql.createConnection({
 });
 
 
-// var testLogin = process.env.DB_USER || 'root';
-// var testPassword = process.env.DB_PASS || 'johnny';
-// var testDB = process.env.DB_NAME || 'checkout';
-// // Configure process.env variables in ../.env
-// const connection = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: testLogin,
-//   password: testPassword,
-//   database: testDB,
-// });
+
 
 const db = Promise.promisifyAll(connection, { multiArgs: true });
 

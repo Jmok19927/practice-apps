@@ -6,7 +6,7 @@ USE checkout;
 
 CREATE TABLE Users (
   id integer not null auto_increment,
-  usercookie varchar(32) not null,
+  usercookie varchar(128) not null,
   primary key (id),
   unique key (usercookie)
 );
@@ -38,8 +38,8 @@ CREATE TABLE Address (
 
 CREATE TABLE CreditCard (
   id integer not null auto_increment,
-  number integer not null,
-  expirydate date not null,
+  number varchar(32) not null,
+  expirydate varchar(32) not null,
   CVV integer not null,
   billingZIP integer not null,
   userid integer not null,
