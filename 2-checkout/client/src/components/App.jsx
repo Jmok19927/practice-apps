@@ -18,7 +18,7 @@ class App extends React.Component {
       email: null,
       password: null,
       line1: null,
-      line2: null,
+      line2: '',
       city: null,
       state: null,
       zip: null,
@@ -27,6 +27,7 @@ class App extends React.Component {
       expiry: null,
       CVV: null,
       billingZIP: null,
+      dbObject: null,
     }
   }
 
@@ -72,6 +73,20 @@ class App extends React.Component {
   nextPage(event) {
     console.log('entered nextpage')
     this.sendPost();
+    if (this.state.page === 3) {
+      console.log('do get');
+      axios.get("/info").then((data) => {
+        console.log('nextpagedata', data.data);
+        this.setState({dbObject: data.data})
+        this.changePage();
+      }).catch();
+    } else {
+      this.changePage();
+    }
+  }
+
+  changePage() {
+    console.log('dbObject', this.state.dbObject);
     var nextPage = this.state.page + 1;
     if (this.state.page === 4) {
       this.setState({page: 0});
@@ -93,7 +108,7 @@ class App extends React.Component {
     } else if (page === 'Billing') {
       currentPage = <BillingForm change={this.onChange.bind(this)} next={this.nextPage.bind(this)}/>;
     } else if (page === 'Confirmation') {
-      currentPage = <Confirmation change={this.onChange.bind(this)} next={this.nextPage.bind(this)}/>;
+      currentPage = <Confirmation values={this.state.dbObject} change={this.onChange.bind(this)} next={this.nextPage.bind(this)}/>;
     }
     return (
       <div>

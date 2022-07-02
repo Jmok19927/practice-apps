@@ -36,7 +36,7 @@ CREATE TABLE Address (
   foreign key (userid) references Users (id)
 );
 
-CREATE TABLE CreditCard (
+CREATE TABLE Billing (
   id integer not null auto_increment,
   number varchar(32) not null,
   expirydate varchar(32) not null,

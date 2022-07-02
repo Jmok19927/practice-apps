@@ -27,6 +27,19 @@ app.post("/user", (req, res) => {
   }).catch();
 })
 
+app.get("/info", (req, res) => {
+  var userId;
+  db.queryAsync(`SELECT id FROM Users WHERE "${req.session_id}"=usercookie`).then((data) => {
+    userId = data[0][0].id;
+  }).then(()=> {
+    db.queryAsync(`SELECT * FROM Account, Address, Billing WHERE Account.userid=${userId} `).then((data) => {
+      console.log('get data:', data[0][0])
+      res.end(JSON.stringify(data[0][0]))
+    })
+  })
+
+})
+
 app.post("/info", (req, res) => {
   var postType = req.body.type;
   var userId;
@@ -39,7 +52,7 @@ app.post("/info", (req, res) => {
         "${req.body.email}",
         "${req.body.password}",
         ${userId} )
-        ON DUPLICATE KEY UPDATE id=id`)
+        ON DUPLICATE KEY UPDATE name="${req.body.name}", email="${req.body.email}", password="${req.body.password}"`)
     } else if (postType === 'Address') {
       db.queryAsync(`INSERT INTO Address (line1, line2, city, state, ZIP, phonenumber, userid) VALUES (
         "${req.body.line1}",
@@ -48,16 +61,28 @@ app.post("/info", (req, res) => {
         "${req.body.state}",
         "${req.body.zip}",
         "${req.body.phoneNumber}",
-         ${userId} ) ON DUPLICATE KEY UPDATE id=id`)
+         ${userId} ) ON DUPLICATE KEY UPDATE
+         line1="${req.body.line1}",
+         line2="${req.body.line2}",
+         city="${req.body.city}",
+         state="${req.body.state}",
+         ZIP="${req.body.zip}",
+         phonenumber="${req.body.phoneNumber}"`)
     } else if (postType === 'Billing') {
       db.queryAsync(`INSERT INTO Billing (number, expirydate, CVV, billingZIP, userid) VALUES (
         "${req.body.creditCard}",
         "${req.body.expiry}",
         "${req.body.CVV}",
         "${req.body.billingZIP}",
-         ${userId} ) ON DUPLICATE KEY UPDATE id=id`)
+         ${userId} ) ON DUPLICATE KEY UPDATE
+        number="${req.body.creditCard}",
+        expirydate="${req.body.expiry}",
+        CVV="${req.body.CVV}",
+        billingZIP="${req.body.billingZIP}"`)
     }
   }).catch();
+
+
 
   console.log(req.body)
   // if (postType === "Account") {
